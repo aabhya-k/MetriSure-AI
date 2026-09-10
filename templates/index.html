@@ -1,0 +1,557 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MetriQ — Legal Metrology Inspection</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f7fb;
+        color: #172033;
+    }
+
+    header {
+        background: #111827;
+        color: white;
+        padding: 18px 7%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .brand {
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+    .brand span {
+        color: #60a5fa;
+    }
+
+    header small {
+        opacity: 0.8;
+    }
+
+    .hero {
+        padding: 70px 7%;
+        background: linear-gradient(135deg, #111827, #1e3a5f);
+        color: white;
+    }
+
+    .hero h1 {
+        font-size: 45px;
+        max-width: 850px;
+        margin: 0 0 18px;
+    }
+
+    .hero p {
+        max-width: 750px;
+        font-size: 18px;
+        line-height: 1.7;
+        opacity: 0.9;
+    }
+
+    .container {
+        width: 86%;
+        max-width: 1200px;
+        margin: 35px auto;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .card h2,
+    .card h3 {
+        margin-top: 0;
+    }
+
+    .muted {
+        color: #667085;
+    }
+
+    .upload-box {
+        border: 2px dashed #94a3b8;
+        border-radius: 14px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .input-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin: 25px 0;
+    }
+
+    .input-option {
+        border: 1px solid #dbe2ea;
+        border-radius: 12px;
+        padding: 20px;
+        background: #f8fafc;
+    }
+
+    .input-option label {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 12px;
+        cursor: pointer;
+    }
+
+    input[type="file"] {
+        width: 100%;
+    }
+
+    .button {
+        border: none;
+        background: #2563eb;
+        color: white;
+        padding: 13px 25px;
+        border-radius: 9px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background: #1d4ed8;
+    }
+
+    .ocr-box {
+        background: #111827;
+        color: #e5e7eb;
+        padding: 20px;
+        border-radius: 12px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .ocr-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font-family: Consolas, monospace;
+    }
+
+    .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 18px;
+    }
+
+    .field-item {
+        border: 1px solid #dbe2ea;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .field-item strong {
+        display: block;
+        margin-bottom: 7px;
+        color: #344054;
+    }
+
+    .field-item span {
+        color: #111827;
+        word-break: break-word;
+    }
+
+    .result {
+        border-left: 5px solid #94a3b8;
+        padding: 15px 18px;
+        margin: 12px 0;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .result strong {
+        display: inline-block;
+        margin-bottom: 5px;
+    }
+
+    .status {
+        font-weight: 800;
+    }
+
+    .summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .summary-box {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #e2e8f0;
+    }
+
+    .summary-box .number {
+        display: block;
+        font-size: 28px;
+        font-weight: 800;
+        margin-top: 8px;
+    }
+
+    .condition {
+        background: #f8fafc;
+        border: 1px solid #dbe2ea;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    footer {
+        text-align: center;
+        padding: 35px 20px;
+        color: #667085;
+        font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .input-options,
+        .field-grid,
+        .summary {
+            grid-template-columns: 1fr;
+        }
+
+        .container {
+            width: 92%;
+        }
+
+        header {
+            padding: 15px 4%;
+        }
+    }
+</style>
+</head><body><header>
+    <div class="brand">Metri<span>Q</span></div>
+    <small>SIH 2026</small>
+</header><section class="hero">
+    <h1>AI-enabled Evidence-Driven Legal Metrology Inspection</h1><p>
+    Inspect packaged commodities using package images, OCR,
+    structured evidence and rule-based compliance evaluation.
+</p>
+
+</section><main class="container"><!-- Upload -->
+<div class="card">
+    <h2>Inspect a Package</h2>
+
+    <p class="muted">
+        Capture a package photograph or select an existing image
+        to begin inspection.
+    </p>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <div class="upload-box">
+
+            <strong>Choose Inspection Image</strong>
+
+            <div class="input-options">
+
+                <div class="input-option">
+
+                    <label for="cameraInput">
+                        📷 Capture with Camera
+                    </label>
+
+                    <input
+                        type="file"
+                        id="cameraInput"
+                        name="package_image"
+                        accept="image/*"
+                        capture="environment"
+                    >
+
+                </div>
+
+                <div class="input-option">
+
+                    <label for="galleryInput">
+                        🖼️ Choose from Gallery
+                    </label>
+
+                    <input
+                        type="file"
+                        id="galleryInput"
+                        name="package_image_gallery"
+                        accept="image/*"
+                    >
+
+                </div>
+
+            </div>
+
+            <button type="submit" class="button">
+                Inspect Package
+            </button>
+
+        </div>
+
+    </form>
+</div>
+
+
+{% if uploaded_filename %}
+
+<div class="card">
+
+    <h3>Uploaded Package</h3>
+
+    <p class="muted">
+        File: {{ uploaded_filename }}
+    </p>
+
+</div>
+
+{% endif %}
+
+
+<!-- OCR -->
+{% if ocr_text %}
+
+<div class="card">
+
+    <h3>Extracted Package Text</h3>
+
+    <p class="muted">
+        Text detected from the uploaded package image.
+    </p>
+
+    <div class="ocr-box">
+        <pre>{{ ocr_text }}</pre>
+    </div>
+
+
+    <!-- Extracted fields -->
+    {% if extracted_fields %}
+
+    <h3 style="margin-top: 28px;">
+        Detected Compliance Fields
+    </h3>
+
+    <div class="field-grid">
+
+        <div class="field-item">
+            <strong>MRP</strong>
+            <span>
+                {{ extracted_fields.mrp or "Not detected" }}
+            </span>
+        </div>
+
+        <div class="field-item">
+            <strong>Net Quantity</strong>
+            <span>
+                {{ extracted_fields.net_quantity or "Not detected" }}
+            </span>
+        </div>
+
+        <div class="field-item">
+            <strong>Consumer Care</strong>
+            <span>
+                {{ extracted_fields.consumer_care or "Not detected" }}
+            </span>
+        </div>
+
+        <div class="field-item">
+            <strong>Manufacturer</strong>
+            <span>
+                {{ extracted_fields.manufacturer or "Not detected" }}
+            </span>
+        </div>
+
+        <div class="field-item">
+            <strong>Country of Origin</strong>
+            <span>
+                {{ extracted_fields.country_of_origin or "Not detected" }}
+            </span>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endif %}
+
+
+{% if inspection %}
+
+<!-- Summary -->
+<div class="card">
+
+    <h2>Compliance Summary</h2>
+
+    <div class="summary">
+
+        <div class="summary-box">
+            <div>Compliance Score</div>
+            <span class="number">
+                {{ inspection.score }}%
+            </span>
+        </div>
+
+        <div class="summary-box">
+            <div>Overall Status</div>
+            <span class="number">
+                {{ inspection.status }}
+            </span>
+        </div>
+
+        <div class="summary-box">
+            <div>Rules Checked</div>
+            <span class="number">
+                {{ inspection.results|length }}
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Rule results -->
+<div class="card">
+
+    <h2>Compliance Results</h2>
+
+    {% for result in inspection.results %}
+
+    <div class="result">
+
+        <strong>
+            {{ result.rule_id }} —
+            {{ result.name }}
+        </strong>
+
+        <br>
+
+        <span class="status">
+            {{ result.status }}
+        </span>
+
+        <br>
+
+        <span class="muted">
+            {{ result.reason }}
+        </span>
+
+        {% if result.provision %}
+
+        <br>
+
+        <small>
+            Provision: {{ result.provision }}
+        </small>
+
+        {% endif %}
+
+        {% if result.evidence %}
+
+        <br>
+
+        <small>
+            Evidence: {{ result.evidence }}
+        </small>
+
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+<!-- Conditional requirements -->
+{% if inspection.conditions %}
+
+<div class="card">
+
+    <h2>Conditional Requirements</h2>
+
+    <p class="muted">
+        Requirements activated based on the inspection context.
+    </p>
+
+    {% for condition in inspection.conditions %}
+
+    <div class="condition">
+
+        <strong>
+            {{ condition.condition }}
+        </strong>
+
+        <br>
+
+        {{ condition.action }}
+
+        <br>
+
+        <small>
+            Rule: {{ condition.rule_id }}
+        </small>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
+<!-- Legal version -->
+{% if inspection.legal_version %}
+
+<div class="card">
+
+    <h3>Legal Version Context</h3>
+
+    <p>
+        <strong>Base version:</strong>
+        {{ inspection.legal_version.base_version }}
+    </p>
+
+    <p>
+        <strong>Inspection date:</strong>
+        {{ inspection.legal_version.inspection_date }}
+    </p>
+
+    <p>
+        <strong>Active amendments:</strong>
+        {{ inspection.legal_version.amendment_count }}
+    </p>
+
+</div>
+
+{% endif %}
+
+{% endif %}
+
+</main><footer>
+    MetriQ · Smart India Hackathon 2026
+    <br>
+    AI-enabled evidence-driven legal metrology inspection system
+</footer></body>
+</html>

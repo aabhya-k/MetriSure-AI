@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+venv/
+.env
+ocr_env/
+enhanced_packet.jpeg
+mrp_crop.jpeg
+ocr_env/
+ocr_env/
