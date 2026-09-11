@@ -3,3 +3,5 @@ gunicorn
 Pillow
 opencv-python-headless
 numpy
+paddlepaddle==3.2.0
+paddleocr

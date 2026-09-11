@@ -1,30 +1,19 @@
 import os
 from PIL import Image, ImageEnhance, ImageFilter
 
-# PaddleOCR is optional.
-# This allows the web app to start on deployments
-# where PaddleOCR is not available.
-PADDLE_AVAILABLE = False
-ocr = None
+# Must be set before importing Paddle/PaddleOCR
+os.environ["FLAGS_use_mkldnn"] = "0"
+os.environ["FLAGS_enable_pir_api"] = "0"
 
-try:
-    # Must be set before importing Paddle/PaddleOCR
-    os.environ["FLAGS_use_mkldnn"] = "0"
-    os.environ["FLAGS_enable_pir_api"] = "0"
+from paddleocr import PaddleOCR
 
-    from paddleocr import PaddleOCR
 
-    ocr = PaddleOCR(
-        lang="en",
-        use_doc_orientation_classify=False,
-        use_doc_unwarping=False,
-        use_textline_orientation=False,
-    )
-
-    PADDLE_AVAILABLE = True
-
-except Exception as error:
-    print("PaddleOCR unavailable:", error)
+ocr = PaddleOCR(
+    lang="en",
+    use_doc_orientation_classify=False,
+    use_doc_unwarping=False,
+    use_textline_orientation=False,
+)
 
 
 def _get_result_data(page):
@@ -46,10 +35,6 @@ def run_ocr_detections(image_path):
     Run PaddleOCR and return detected text with
     bounding boxes and confidence scores.
     """
-
-    if not PADDLE_AVAILABLE:
-        print("OCR unavailable: PaddleOCR is not installed.")
-        return []
 
     if not os.path.exists(image_path):
         raise FileNotFoundError(
@@ -104,12 +89,15 @@ def _create_mrp_crop(image_path):
     """
     Create a targeted crop around the lower-left package
     declaration area where MRP is printed.
+
+    Returns the temporary crop path.
     """
 
     image = Image.open(image_path).convert("RGB")
 
     width, height = image.size
 
+    # Targeted area established from our successful test.
     left = 0
     top = 1080
     right = min(width, 450)
@@ -119,6 +107,7 @@ def _create_mrp_crop(image_path):
         (left, top, right, bottom)
     )
 
+    # Enlarge tiny printed declarations.
     crop = crop.resize(
         (
             crop.width * 5,
@@ -127,7 +116,10 @@ def _create_mrp_crop(image_path):
         Image.Resampling.LANCZOS,
     )
 
+    # Improve contrast.
     crop = ImageEnhance.Contrast(crop).enhance(2.0)
+
+    # Improve sharpness.
     crop = ImageEnhance.Sharpness(crop).enhance(2.5)
 
     crop = crop.filter(
@@ -154,17 +146,16 @@ def _create_mrp_crop(image_path):
 def run_mrp_ocr(image_path):
     """
     Run targeted OCR on the MRP region.
-    """
 
-    if not PADDLE_AVAILABLE:
-        return []
+    Returns detections from the MRP crop.
+    """
 
     crop_path = _create_mrp_crop(image_path)
 
     try:
         return run_ocr_detections(crop_path)
-
     finally:
+        # Remove temporary crop after OCR.
         if os.path.exists(crop_path):
             os.remove(crop_path)
 
@@ -173,16 +164,9 @@ def run_ocr(image_path):
     """
     Run normal package OCR plus targeted MRP OCR.
 
-    If PaddleOCR is unavailable, return an empty OCR result
-    instead of crashing the entire web application.
+    The targeted MRP OCR is added only as an additional
+    evidence line. It does not fabricate an MRP value.
     """
-
-    if not PADDLE_AVAILABLE:
-        print(
-            "PaddleOCR is unavailable on this deployment. "
-            "Continuing without OCR."
-        )
-        return ""
 
     detections = run_ocr_detections(image_path)
 
@@ -191,6 +175,7 @@ def run_ocr(image_path):
         for item in detections
     ]
 
+    # Targeted MRP fallback.
     try:
         mrp_detections = run_mrp_ocr(image_path)
 
@@ -198,6 +183,7 @@ def run_ocr(image_path):
 
             text = item["text"]
 
+            # Only append likely MRP values.
             if (
                 "rs" in text.lower()
                 or "₹" in text
