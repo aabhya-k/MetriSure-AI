@@ -3,7 +3,6 @@ from datetime import date
 import os
 from werkzeug.utils import secure_filename
 
-from ocr import run_ocr
 from field_extractor import extract_fields
 
 from rules import evaluate_rule, calculate_compliance_score, get_overall_status
@@ -295,19 +294,12 @@ def index():
             # ----------------------------------------
             # OCR
             # ----------------------------------------
+            # OCR is performed in the browser using Tesseract.js.
+            # The browser sends the recognized text to the Flask backend.
+            ocr_text = request.form.get("ocr_text", "").strip()
 
-            try:
-
-                ocr_text = run_ocr(
-                    image_path
-                )
-
-            except Exception as error:
-
-                ocr_text = (
-                    f"OCR error: {error}"
-                )
-
+            if not ocr_text:
+                ocr_text = "No OCR text was received."
             # ----------------------------------------
             # FIELD EXTRACTION
             # ----------------------------------------
